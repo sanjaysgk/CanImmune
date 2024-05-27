@@ -1,8 +1,8 @@
 ## Log files
 **/logs
-
+**_logs.txt
 #Enviroments
 **/env
-
+__pycache__
 #git push --set-upstream origin beta
 
