@@ -1,7 +1,8 @@
 import logging
-from models.utils import dTime
+from utils import dTime
 logger = logging.getLogger(__name__)
 import os
+
 class Files_Manager:
     def __init__(self):
         self.file = None
@@ -33,6 +34,13 @@ class Files_Manager:
 
         while fp.tell() < end:
             yield fp.readline()
+            
+            
+    def _find_fileType(self):
+        if len(self.file.split('.')) > 1:
+            return self.file.split('.')[-1]
+        else:
+            raise ValueError("File type not found")
     
     def check_permission(self):
         return self.file.mode
@@ -77,3 +85,8 @@ class logs:
     def _add_debug(self, debug):
         logging.debug(debug)
         
+
+if __name__ == '__main__':
+    manager = Files_Manager()
+    manager.file = "enst_to_gene.json"
+    manager._find_fileType()

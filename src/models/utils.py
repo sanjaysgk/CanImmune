@@ -1,5 +1,74 @@
 import datetime
+import re
 
+class MutationCounter:
+    def __init__(self):
+        self.counters = {
+            "MAIN_count": 0,
+            "FILE_ERROR_counter": 0,
+            "FILE_SUCCESS_counter": 0,
+            "TRANSCRIPT_FOUND_counter": 0,
+            "TRANSCRIPT_NOT_FOUND_counter": 0,
+            "SUBSTITUTION_FOUND_counter": 0,
+            "SUBSTITUTION_NOT_FOUND_counter": 0,
+            "SUBSTITUTION_SUCCESS_counter": 0,
+            "SUBSTITUTION_ERROR_counter": 0,
+            "POSITION_FOUND_counter": 0,
+            "POSITION_2ND_ATTEMPT_FOUND_counter": 0,
+            "POSITION_3RD_ATTEMPT_FOUND_counter": 0,
+            "POSITION_NOT_FOUND_counter": 0,
+            "UNIPROTtoGRch38_NOT_FOUND_counter": 0,
+            "MULTI_SEQ_FOUND_counter": 0,
+            "MULTI_SEQ_POSITION_FOUND_counter": 0,
+            "SUBSTITUTION_FOUND_2ND_ATTEMPT_counter": 0,
+            "SUBSTITUTION_FOUND_3RD_ATTEMPT_counter": 0
+        }
+
+    def update(self, counter_name, value):
+        if not isinstance(value, int):
+            raise ValueError(f"Value must be an integer not {value}")
+        if counter_name in self.counters:
+            self.counters[counter_name] += value
+        else:
+            raise ValueError(f"Counter {counter_name} does not exist")
+
+    def delete(self, counter_name):
+        if counter_name in self.counters:
+            del self.counters[counter_name]
+        else:
+            raise ValueError(f"Counter {counter_name} does not exist")
+
+    def set_default(self, counter_name, value=0):
+        self.counters[counter_name] = value
+        
+
+class MutationFinder:
+    def __init__(self):
+        self.Mutation_AA = None
+        self.Mutation_CDS = None
+        self.Mutation_from = None
+        self.Mutation_to = None
+        self.Mutation_pos = None
+        
+    def _regexAA_Substitution(self, Mutation_AA):
+        assert isinstance(Mutation_AA, str), "Expected string for Mutation_AA"
+        if re.match(r'^p\.[A-Z][0-9]+[A-Z]$',Mutation_AA):
+            self.Mutation_AA = Mutation_AA
+            return True
+        else:
+            return False
+        
+    def _get_Substitution(self):
+        assert self.Mutation_AA is not None, "Mutation_AA is not set"
+        assert re.fullmatch(r'^p\.[A-Z][0-9]+[A-Z]$', self.Mutation_AA) is not None, f"Mutation_AA Substitution is not valid format expected p.[A-Z][0-9]+[A-Z] got {self.Mutation_AA}"
+        mutation_rex = re.search(r'p\.([A-Z])([0-9]+)([A-Z])', self.Mutation_AA)
+        mutation_from = mutation_rex.group(1)
+        mutation_pos = int(mutation_rex.group(2))
+        mutation_to = mutation_rex.group(3)
+        del self.Mutation_AA
+        return mutation_from, mutation_pos, mutation_to
+    
+    
 class MutationValidator:
     def __init__(self, data: dict):
         assert isinstance(data["TRANSCRIPT_ACCESSION"], str), "Expected string for TRANSCRIPT_ACCESSION"
