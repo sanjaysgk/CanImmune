@@ -1,0 +1,20 @@
+Metadata-Version: 2.1
+Name: CanImmune
+Version: 1.0
+Summary: Neoantigen prediction tool for cancer immunotherapy.
+Home-page: http://canelib.erc.monash.edu/purcell-lab
+Author: Sanjay SG Krishna
+Author-email: sanjaygowda6633@gmail.com
+Keywords: Neoantigen,Cancer,Immunotherapy,Tumor,Immune
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.8, <4
+
+## CAN-IMMUNE Tool
+
+--- TODO
+
+Create a Env
